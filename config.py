@@ -8,3 +8,15 @@ gifs = [
     'https://tenor.com/view/toji-jjk-edit-toji-edit-toji-fushiguro-toji-jjk-gif-2595306297905933760',
     'https://tenor.com/view/toji-toji-fushiguro-cute-wife-toji-wife-gif-13087645902577823041'
 ]
+
+command = '^'
+
+blacklist = (
+    '!',
+    '$',
+    '#',
+    '?',
+    ':',
+    '&',
+    '%'
+)
