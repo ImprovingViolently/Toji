@@ -1,5 +1,6 @@
 import discord
-import random
+from cofig import token, gifs
+from random import choice
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -20,14 +21,8 @@ async def on_message(message):
 
     msg = message.content.lower()
     word = 'toji'
-    gifs = ['test0',
-            'test1',
-            'test2',
-            'test3',
-            'test4',
-            'test5',]
-
+    
     if word in msg:
-        await message.channel.send(random.choice(gifs))
+        await message.channel.send(choice(gifs))
 
-client.run('INSERT YOUR OWN TOKEN HERE')
+client.run(token)
