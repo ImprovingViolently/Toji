@@ -32,6 +32,12 @@ def tojiState(alive):
     embedVar.add_field(name= command + "toggle", value="To toggle Toji's auto respond.", inline=False)
     return embedVar
 
+# ADDGIF
+
+def addgifCommand():
+    embedvar = discord.Embed(title="Adding GIF", description="Attempting to add the desired GIF to the database.", color=generalColour)
+    return embedvar
+
 # ERRORS
 
 def invalidCommand():
@@ -41,4 +47,10 @@ def invalidCommand():
 
 def invalidState():
     embedVar = discord.Embed(title="ERROR", description="CONTACT MSG WITH ERROR code [TOJI_TOGGLE_CRIT_FAIL_ELIF]", color=errorColour)
+    return embedVar
+
+# DEBUG
+
+def killCommand():
+    embedVar = discord.Embed(title="TOJIBOT PROCESS HAS ENDED", description="CONTACT MSG WITH ERROR code [TOJI_BOT_DEATH_KILL_MANUAL]", color=errorColour)
     return embedVar
