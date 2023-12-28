@@ -1,10 +1,17 @@
 import discord
+# CREDENTIALS
 
-# DISCORD CREDS
-token = 'your-token'
+## Discord
+discordtoken = 'your-token'
+
+## mySQL
+
+dbUser = 'your-user'
+dbPassword= 'your-password'
+dbHost = 'your-ip'
+dbDatabase = 'your-database'
 
 # BOT CONFIG
-
 ## Sets command prefix
 command = '^'
 
