@@ -1,75 +1,71 @@
-from config import token, gifs, blacklist, command
-from parse import msgParse
-import discord
-import embeds
-import random
+from config import token, gifs, blacklist, command, status
+from discord.ext import commands
+import commands as cmd
+import discord, embeds, random, sys
 
 intents = discord.Intents.default()
 intents.message_content = True
 
+bot = commands.Bot(command_prefix=command, intents=intents, help_command=None)
+
 class toji:
     alive = 1
 
-client = discord.Client(intents=intents)
-
-@client.event
+@bot.event
 async def on_ready():
-    print(f'We have logged in as {client.user}')
+    print(f'We have logged in as {bot.user}')
+    status = discord.Game(command+'help')
+    await bot.change_presence(status=discord.Status.online, activity=status)
 
-@client.event
+@bot.event
 async def on_message(message):
-    msg = message.content.lower()
-
-    # Checks if author is itself in order to prevent a feedback loop. DO NOT REMOVE THIS
-    if message.author == client.user:
+    if message.author == bot.user:
         return
 
-    if message.content.startswith(command):
-        parsedMessage = msgParse(msg)
-        await commandSwitch(parsedMessage, message)
-
-    # Checks all messages for 'toji', returns a random gif.
-    word = 'toji'
-    
-    if word in msg:
+    if 'toji' in message.content.lower():
         if message.content.startswith(blacklist):
             return
         else:
             if toji.alive == 1:
                 await message.channel.send(random.choice(gifs))
 
-# Checks if it is a command
+    await bot.process_commands(message)
 
-async def commandSwitch(parsedMessage, message):
-    
-    # Toggle command turns on/off bot auto respond.
-    
-    if parsedMessage == 't' or parsedMessage == 'toggle':
-        if toji.alive == 1:
-            toji.alive = 0
-            await message.channel.send(embed=embeds.tojiOff())
-        elif toji.alive == 0:
-            toji.alive = 1
-            await message.channel.send(embed=embeds.tojiOn())
-        else:
-            await message.channel.send(embed=embeds.invalidState())
-    
-    # State checker. Returns an embed dependent on the toji.alive variable
+@bot.event
+async def on_command_error(ctx, error):
+    await ctx.send(embed=embeds.invalidCommand())
 
-    elif parsedMessage == 's' or parsedMessage == 'status':
-        if toji.alive == 0 or toji.alive == 1:    
-            await message.channel.send(embed=embeds.tojiState(toji.alive))
-        else:
-            await message.channel.send(embed=embeds.invalidState())  
-    
-    # Help command. Returns embed containing a list of commands
+@bot.command(aliases=cmd.help)
+async def help(ctx):
+    await ctx.send(embed=embeds.helpCommand())
 
-    elif parsedMessage == 'h' or parsedMessage == 'help':
-        await message.channel.send(embed=embeds.helpCommand())
-    
-    # Fallback in case of invalid command
-    
+@bot.command(aliases=cmd.status)
+async def status(ctx):
+    if toji.alive == 0 or toji.alive == 1:    
+        await ctx.send(embed=embeds.tojiState(toji.alive))
     else:
-        await message.channel.send(embed=embeds.invalidCommand())
+        await ctx.send(embed=embeds.invalidState())  
 
-client.run(token)
+# Toggles the toji auto-respond. Simply checks state, toggles accordingly and calls relevant embed.
+@bot.command(aliases=cmd.toggle)
+async def toggle(ctx):
+    if toji.alive == 1:
+        toji.alive = 0
+        await ctx.send(embed=embeds.tojiOff())
+    elif toji.alive == 0:
+        toji.alive = 1
+        await ctx.send(embed=embeds.tojiOn())
+    else:
+        await ctx.send(embed=embeds.invalidState())
+
+@bot.command(aliases=cmd.kill)
+async def kill(ctx):
+     await ctx.send(embed=embeds.killCommand())
+     sys.exit()
+
+@bot.command(aliases=cmd.addGif)
+async def addgif(ctx, link):
+    await ctx.send(embed=embeds.addgifCommand())
+
+#client.run(token)
+bot.run(token)
