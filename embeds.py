@@ -38,6 +38,21 @@ def addgifCommand():
     embedvar = discord.Embed(title="Adding GIF", description="Attempting to add the desired GIF to the database.", color=generalColour)
     return embedvar
 
+def addgifSuccess(link):
+    embedvar = discord.Embed(title="GIF Successfully Added!", description="The GIF you have requested has been successfully added!", color=successColour)
+    embedvar.set_image(url=link)
+    return embedvar
+
+# REMOVEGIF
+
+def removegifCommand():
+    embedvar = discord.Embed(title="Removing GIF", description="Attempting to remove selected GIF.", color=generalColour)
+    return embedvar
+
+def removegifSuccess():
+    embedvar = discord.Embed(title="Successfully removed GIF!", description="GIF has been removed successfully!", color=successColour)
+    return embedvar
+
 # ERRORS
 
 def invalidCommand():
@@ -48,6 +63,18 @@ def invalidCommand():
 def invalidState():
     embedVar = discord.Embed(title="ERROR", description="CONTACT MSG WITH ERROR code [TOJI_TOGGLE_CRIT_FAIL_ELIF]", color=errorColour)
     return embedVar
+
+def addgifInvalid():
+    embedvar = discord.Embed(title="Failure: Invalid", description="Failed to add GIF to the database as the source is not " + gifPrefix, color=errorColour)
+    return embedvar
+
+def gifDuplicate():
+    embedvar = discord.Embed(title="Failure: Duplicate", description="Failed to add GIF to the database as the GIF is already in the database.", color=errorColour)
+    return embedvar
+
+def gifFake():
+    embedvar = discord.Embed(title="GIF Doesn't Exist", description="Check your link and try again.", color=errorColour)
+    return embedvar
 
 # DEBUG
 
