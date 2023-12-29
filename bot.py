@@ -1,7 +1,9 @@
-from config import token, gifs, blacklist, command, status
+from config import *
+from parse import *
 from discord.ext import commands
 import commands as cmd
 import discord, embeds, random, sys
+import mysql.connector
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -24,16 +26,18 @@ async def on_message(message):
 
     if 'toji' in message.content.lower():
         if message.content.startswith(blacklist):
+            await bot.process_commands(message)
             return
         else:
             if toji.alive == 1:
-                await message.channel.send(random.choice(gifs))
+                await message.channel.send(gifPrefix + random.choice(tojiSummon()))
 
     await bot.process_commands(message)
 
 @bot.event
 async def on_command_error(ctx, error):
     await ctx.send(embed=embeds.invalidCommand())
+    await ctx.send(error)
 
 @bot.command(aliases=cmd.help)
 async def help(ctx):
@@ -66,6 +70,37 @@ async def kill(ctx):
 @bot.command(aliases=cmd.addGif)
 async def addgif(ctx, link):
     await ctx.send(embed=embeds.addgifCommand())
+    if gifValidator(link) == True:
+        if gifDuplicateDetector(gifCleaner(link)) == False:
+            gifLink = gifCleaner(link)
+            userID = ctx.message.author.id
+            addGifQuery(gifLink, userID)
+            await ctx.send(embed=embeds.addgifSuccess(link))
+        else:
+            await ctx.send(embed=embeds.gifDuplicate())
+    else:
+        await ctx.send(embed=embeds.addgifInvalid())
 
-#client.run(token)
-bot.run(token)
+@bot.command(aliases=cmd.removeGif)
+async def removegif(ctx, link):
+    await ctx.send(embed=embeds.removegifCommand())
+    if gifDuplicateDetector(gifCleaner(link)) == True:
+        removeGifQuery(link)
+        await ctx.send(embed=embeds.removegifSuccess())
+    else:
+        await ctx.send(embed=embeds.gifFake())
+
+@bot.command()
+async def sqltest(ctx):
+    cnx = databaseConnect()
+    cursor = cnx.cursor()
+    query = 'SELECT * FROM gifs'
+    cursor.execute(query)
+    for (gif_id, gif_url, user_id) in cursor:
+        print("{}, {}, {}".format(gif_id, gif_url, user_id))
+        await ctx.send("{}, {}, {}".format(gif_id, gif_url, user_id))
+        await ctx.send(gifPrefix + gif_url)
+    cursor.close()
+    cnx.close()
+
+bot.run(discordtoken)
