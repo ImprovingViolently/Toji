@@ -21,3 +21,8 @@ addGif = [
     'add',
     'ag'
 ]
+
+removeGif = [
+    'remove',
+    'rm'
+]
