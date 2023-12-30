@@ -3,7 +3,7 @@
 TojiBot is a simple Discord bot I put together out of sheer boredom.
 
 # How do I set up TojiBot?
-
+ 
 1. Install discord.py.
 2. Create a Discord application, using a relevant name.
 3. Go to OAuth2 > URL Generator, select 'bot' as the scope, and assign relevant permissions.
