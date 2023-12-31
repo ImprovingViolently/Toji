@@ -10,13 +10,16 @@ errorColour = 0xff0000
 
 def helpCommand():
     embedVar = discord.Embed(title="Help", description="Here is a list of commands:", color=generalColour)
-    embedVar.add_field(name= command + "help", value="Returns a list of commands.", inline=False)
-    embedVar.add_field(name= command + "status", value="Shows whether the bot is online.", inline=False)
-    embedVar.add_field(name= command + "toggle", value="Toggle's bot auto respond.", inline=False)
-    embedVar.add_field(name= command + "addgif", value="{link}. Adds a GIF to the database", inline=False)
-    embedVar.add_field(name= command + "removegif", value="{link}. Removes a GIF from the database", inline=False)
-    embedVar.add_field(name= command + "tojicount", value="{@target}. Returns how many times a user has invoked Toji.", inline=False)
-    embedVar.add_field(name= command + "leaderboard", value="Returns a ranked list of TojiCounts", inline=False)
+    for key in cmd.helpcommands:
+        tuples = cmd.helpcommands[key]
+        embedVar.add_field(name= command + tuples[3], value=tuples[0], inline=False)
+    return embedVar
+
+def helpIndividual(com):
+    dictionary = cmd.helpcommands[com]
+    embedVar = discord.Embed(title="Help " + command + com, description=dictionary[0], color=generalColour)
+    embedVar.add_field(name="Aliases", value=dictionary[1] )
+    embedVar.add_field(name="Syntax", value=dictionary[2], inline=False)
     return embedVar
 
 # TOJI TOGGLE
