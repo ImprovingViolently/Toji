@@ -1,3 +1,5 @@
+from config import *
+
 toggle = [
     'tog',
     't'
