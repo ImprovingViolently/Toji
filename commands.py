@@ -31,3 +31,8 @@ tojiCount = [
     'count',
     'tc'
 ]
+
+tojilb = [
+    'board',
+    'lb'
+]
