@@ -26,3 +26,8 @@ removeGif = [
     'remove',
     'rm'
 ]
+
+tojiCount = [
+    'count',
+    'tc'
+]
