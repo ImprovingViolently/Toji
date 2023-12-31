@@ -25,6 +25,14 @@ def gifValidator(gifURL):
     else:
         return False
 
+def targetValidator(ctx, args):
+    if len(args) != 1:
+        target = "<@{}>".format(ctx.author.id)
+    else:
+        if "<@" in args[0]:
+            target = args[0]
+    return target
+
 def gifCleaner(gifValidURL):
     shortURL = gifValidURL.replace(gifPrefix, '')
     return shortURL
