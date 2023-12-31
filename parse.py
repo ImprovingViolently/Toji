@@ -30,56 +30,65 @@ def gifCleaner(gifValidURL):
     return shortURL
 
 def gifDuplicateDetector(gifShortURL):
-    cnx = databaseConnect()
-    cursor = cnx.cursor(buffered=True)
     query = 'SELECT gif_url FROM gifs'
-    cursor.execute(query)
-    for (gif_url) in cursor:
+    database = sqlQuery(query, False, True)
+    for (gif_url) in database:
         if gifShortURL in str(gif_url):
-            print(cursor)
-            cursor.close()
-            cnx.close()
             return True
         else:
             pass
-    cursor.close()
-    cnx.close()
+    return False
 
 def addGifQuery(gifShortURL, userID):
-    cnx = databaseConnect()
-    cursor = cnx.cursor()
-    sql = '''
-        INSERT IGNORE INTO gifs (gif_url, user_id)
-        VALUES (%s, %s)
-    '''
-    val = [
-        (str(gifShortURL), str(userID))
-    ]
-    cursor.executemany(sql, val)
-    cnx.commit()
-    print("Query successful")
-    cursor.close()
-    cnx.close()
+    query = "INSERT IGNORE INTO gifs (gif_url, user_id) VALUES ('{}', '{}')".format(str(gifShortURL), str(userID))
+    sqlQuery(query, True, False)
 
 def removeGifQuery(gifShortURL):
-    cnx = databaseConnect()
-    cursor = cnx.cursor()
-    sql = "DELETE FROM gifs WHERE gif_url = '{}';".format(gifCleaner(gifShortURL))
-    cursor.execute(sql)
-    cnx.commit()
-    print("Query successful")
-    cursor.close()
-    cnx.close()
+    query = "DELETE FROM gifs WHERE gif_url = '{}';".format(gifCleaner(gifShortURL))
+    sqlQuery(query, True, False)
 
 def tojiSummon():
-    cnx = databaseConnect()
-    cursor = cnx.cursor()
     query = 'SELECT * FROM gifs'
-    cursor.execute(query)
+    database = sqlQuery(query, False, True)
     gifCandidates = ['toji-jjk-jujutsu-kaisen-tuesday-toji-picmix-gif-8168723334892853958']
-    for (gif_id, gif_url, user_id) in cursor:
-        print(gif_url)
+    for (gif_id, gif_url, user_id) in database:
         gifCandidates.append("{}".format(gif_url))
+    return gifCandidates
+
+def countValidate(targetUID):
+    query = "SELECT * FROM tojicount;"
+    database = sqlQuery(query, False, True)
+    for (count_id, uid, count) in database:
+        if targetUID in uid:
+            return True
+        else:
+            pass
+    return False
+
+def countNew(UID):
+    query = "INSERT IGNORE INTO tojicount (uid, count) VALUES ('{}', 1);".format(UID)
+    sqlQuery(query, True, True)
+
+def countCheck(UID):
+    query = "SELECT count FROM tojicount WHERE uid = '{}';".format(UID)
+    for count in sqlQuery(query, False, True):
+        counter = count
+    return counter[0]
+
+def countUpdate(counter, uid):
+    counter += 1
+    query = "UPDATE tojicount SET count = {} WHERE uid = '{}';".format(counter, uid)
+    sqlQuery(query, True, False)
+
+def sqlQuery(query, commit, returnValue):
+    cnx = databaseConnect()
+    cursor = cnx.cursor(buffered=True)
+    cursor.execute(query)
+    if commit == True:
+        cnx.commit()
+    if returnValue == True:
+        output = cursor.fetchall()
     cursor.close()
     cnx.close()
-    return gifCandidates
+    if returnValue == True:
+        return output
