@@ -12,6 +12,12 @@ def tojiStateChecker(bool):
     else:
         return 
 
+def helpLogic(args):
+    if len(args) != 1:
+        return True
+    else:
+        return False
+
 def databaseConnect():
     cnx = None
     cnx = mysql.connector.connect(user=dbUser, password=dbPassword, host=dbHost, database=dbDatabase)
