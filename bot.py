@@ -30,7 +30,14 @@ async def on_message(message):
             return
         else:
             if toji.alive == 1:
+                UIDping = "<@{}>".format(str(message.author.id))
                 await message.channel.send(gifPrefix + random.choice(tojiSummon()))
+                if countValidate(str(UIDping)) == True:
+                    countUpdate(countCheck(UIDping), UIDping)
+                    await message.channel.send('TojiCount increased by 1, ' + UIDping + ', your TojiCount is now ' + str(countCheck(UIDping)) + '!')
+                else:
+                    countNew(UIDping)
+                    await message.channel.send(UIDping + " has invoked Toji for the first time!")
 
     await bot.process_commands(message)
 
@@ -45,10 +52,10 @@ async def help(ctx):
 
 @bot.command(aliases=cmd.status)
 async def status(ctx):
-    if toji.alive == 0 or toji.alive == 1:    
+    if toji.alive == 0 or toji.alive == 1:
         await ctx.send(embed=embeds.tojiState(toji.alive))
     else:
-        await ctx.send(embed=embeds.invalidState())  
+        await ctx.send(embed=embeds.invalidState())
 
 # Toggles the toji auto-respond. Simply checks state, toggles accordingly and calls relevant embed.
 @bot.command(aliases=cmd.toggle)
@@ -90,17 +97,19 @@ async def removegif(ctx, link):
     else:
         await ctx.send(embed=embeds.gifFake())
 
+@bot.command(aliases=cmd.tojiCount)
+async def tojicount(ctx, target):
+    if countValidate(str(target)) == True:
+        await ctx.send(target + "'s TojiCount is: " + str(countCheck(target)))
+    else:
+        await ctx.send(str(target) + " is yet to invoke Toji.")
+
 @bot.command()
 async def sqltest(ctx):
-    cnx = databaseConnect()
-    cursor = cnx.cursor()
     query = 'SELECT * FROM gifs'
-    cursor.execute(query)
-    for (gif_id, gif_url, user_id) in cursor:
-        print("{}, {}, {}".format(gif_id, gif_url, user_id))
+    database = sqlQuery(query, False, True)
+    for (gif_id, gif_url, user_id) in database:
         await ctx.send("{}, {}, {}".format(gif_id, gif_url, user_id))
         await ctx.send(gifPrefix + gif_url)
-    cursor.close()
-    cnx.close()
 
 bot.run(discordtoken)
