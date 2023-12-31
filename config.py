@@ -36,6 +36,5 @@ sqlBlacklist = [
     '"',
     '%',
     '$',
-    ' union ',
-
+    ' union '
 ]
