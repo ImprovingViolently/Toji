@@ -13,6 +13,9 @@ def helpCommand():
     embedVar.add_field(name= command + "help", value="Returns a list of commands.", inline=False)
     embedVar.add_field(name= command + "status", value="Shows whether the bot is online.", inline=False)
     embedVar.add_field(name= command + "toggle", value="Toggle's bot auto respond.", inline=False)
+    embedVar.add_field(name= command + "addgif", value="{link}. Adds a GIF to the database", inline=False)
+    embedVar.add_field(name= command + "removegif", value="{link}. Removes a GIF from the database", inline=False)
+    embedVar.add_field(name= command + "tojicount", value="{@target}. Returns how many times a user has invoked Toji.", inline=False)
     return embedVar
 
 # TOJI TOGGLE
