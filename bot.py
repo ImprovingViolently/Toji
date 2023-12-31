@@ -98,7 +98,8 @@ async def removegif(ctx, link):
         await ctx.send(embed=embeds.gifFake())
 
 @bot.command(aliases=cmd.tojiCount)
-async def tojicount(ctx, target):
+async def tojicount(ctx, *args):
+    target = targetValidator(ctx, args)
     if countValidate(str(target)) == True:
         await ctx.send(target + "'s TojiCount is: " + str(countCheck(target)))
     else:
