@@ -47,8 +47,11 @@ async def on_command_error(ctx, error):
     await ctx.send(error)
 
 @bot.command(aliases=cmd.help)
-async def help(ctx):
-    await ctx.send(embed=embeds.helpCommand())
+async def help(ctx, *args):
+    if helpLogic(args) == True:
+        await ctx.send(embed=embeds.helpCommand())
+    else:
+        await ctx.send(embed=embeds.helpIndividual(args[0]))
 
 @bot.command(aliases=cmd.status)
 async def status(ctx):
