@@ -104,6 +104,17 @@ async def tojicount(ctx, target):
     else:
         await ctx.send(str(target) + " is yet to invoke Toji.")
 
+@bot.command(aliases=cmd.tojilb)
+async def leaderboard(ctx):
+    rank = 1
+    embedvar = discord.Embed(title="TojiCount Leaderboard", color=0xb300ff)
+    for tuples in countList():
+        uid = str(tuples[0]).replace('<@', '')
+        username = await bot.fetch_user(uid.replace('>', ''))
+        embedvar.add_field(name="{} - {}".format(rank, username), value=str(tuples[1]) + " mention(s) of Toji", inline=False)
+        rank += 1
+    await ctx.send(embed=embedvar)
+
 @bot.command()
 async def sqltest(ctx):
     query = 'SELECT * FROM gifs'
