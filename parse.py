@@ -80,6 +80,15 @@ def countUpdate(counter, uid):
     query = "UPDATE tojicount SET count = {} WHERE uid = '{}';".format(counter, uid)
     sqlQuery(query, True, False)
 
+def countList():
+    query = "SELECT uid, count FROM tojicount;"
+    database = sqlQuery(query, False, True)
+    leaderboard = {}
+    for (uid, count) in database:
+        leaderboard[str(count)] = uid
+    sortedLeaderboard = sorted(leaderboard.items(), key=lambda x:x[1], reverse=True)
+    return sortedLeaderboard
+
 def sqlQuery(query, commit, returnValue):
     cnx = databaseConnect()
     cursor = cnx.cursor(buffered=True)
